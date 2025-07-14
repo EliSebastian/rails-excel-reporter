@@ -147,6 +147,11 @@ module RailsExcelReporter
 
     def add_headers(worksheet)
       header_values = attributes.map { |attr| attr[:header] }
+      add_header_row worksheet, header_values
+      add_auto_filter worksheet
+    end
+
+    def add_header_row(worksheet, header_values)
       header_style = build_caxlsx_style get_header_style
 
       if header_style.any?
@@ -155,7 +160,9 @@ module RailsExcelReporter
       else
         worksheet.add_row header_values
       end
+    end
 
+    def add_auto_filter(worksheet)
       worksheet.auto_filter = "A1:#{column_letter attributes.size}1"
     end
 

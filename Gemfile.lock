@@ -1,10 +1,10 @@
 PATH
   remote: .
   specs:
-    rails-excel-reporter (0.1.0)
-      activesupport (~> 8.0)
+    rails-excel-reporter (0.2.0)
+      activesupport (>= 7.0)
       caxlsx (~> 4.0)
-      rails (~> 8.0)
+      rails (>= 7.0)
 
 GEM
   remote: https://rubygems.org/

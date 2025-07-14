@@ -4,7 +4,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'rails-excel-reporter'
   spec.version       = RailsExcelReporter::VERSION
   spec.authors       = ['Elí Sebastian Herrera Aguilar']
-  spec.email         = ['info@rails-excel-reporter.com']
+  spec.email         = ['esrbastianherrera@gmail.com']
 
   spec.summary       = 'Generate Excel reports (.xlsx) in Rails with a simple DSL'
   spec.description   = 'A Ruby gem that integrates seamlessly with Ruby on Rails to generate Excel reports using a simple DSL. Features include streaming, styling, callbacks, and Rails helpers.'

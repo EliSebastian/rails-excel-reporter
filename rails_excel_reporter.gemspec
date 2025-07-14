@@ -29,7 +29,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'pry', '~> 0.14'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rspec-rails', '~> 5.0'
-  spec.add_development_dependency 'rubocop', '~> 1.0'
   spec.add_development_dependency 'simplecov', '~> 0.21'
   spec.add_development_dependency 'sqlite3', '~> 1.4'
   spec.add_development_dependency 'yard', '~> 0.9'

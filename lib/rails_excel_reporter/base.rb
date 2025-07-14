@@ -23,16 +23,18 @@ module RailsExcelReporter
       if attrs.empty?
         @attributes ||= []
       else
-        @attributes = attrs.map do |attr|
-          case attr
-          when Symbol
-            { name: attr, header: attr.to_s.humanize }
-          when Hash
-            symbolize_hash_keys(attr)
-          else
-            { name: attr.to_sym, header: attr.to_s.humanize }
-          end
-        end
+        @attributes = attrs.map { |attr| process_attribute attr }
+      end
+    end
+
+    def self.process_attribute(attr)
+      case attr
+      when Symbol
+        { name: attr, header: attr.to_s.humanize }
+      when Hash
+        symbolize_hash_keys(attr)
+      else
+        { name: attr.to_sym, header: attr.to_s.humanize }
       end
     end
 

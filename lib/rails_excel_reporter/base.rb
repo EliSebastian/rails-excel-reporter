@@ -195,15 +195,23 @@ module RailsExcelReporter
 
     def get_attribute_value(object, attribute_name)
       if respond_to? attribute_name
-        @object = object
-        result = send attribute_name
-        @object = nil
-        result
+        call_custom_method object, attribute_name
       elsif object.respond_to? attribute_name
         object.send attribute_name
       elsif object.respond_to? :[]
-        object[attribute_name] || object[attribute_name.to_s]
+        get_hash_value object, attribute_name
       end
+    end
+
+    def call_custom_method(object, attribute_name)
+      @object = object
+      result = send attribute_name
+      @object = nil
+      result
+    end
+
+    def get_hash_value(object, attribute_name)
+      object[attribute_name] || object[attribute_name.to_s]
     end
 
     attr_reader :object

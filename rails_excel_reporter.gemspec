@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.description   = 'A Ruby gem that integrates seamlessly with Ruby on Rails to generate Excel reports using a simple DSL. Features include streaming, styling, callbacks, and Rails helpers.'
   spec.homepage      = 'https://github.com/EliSebastian/rails-excel-reporter.git'
   spec.license       = 'MIT'
-  spec.required_ruby_version = Gem::Requirement.new '>= 2.7.0'
+  spec.required_ruby_version = Gem::Requirement.new '>= 3.1.0'
 
   spec.metadata['allowed_push_host'] = 'https://rubygems.org'
   spec.metadata['homepage_uri'] = spec.homepage

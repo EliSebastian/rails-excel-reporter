@@ -8,24 +8,36 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    name: RuboCop
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Extract Ruby version from gemspec
-        id: ruby-version
-        run: |
-          RUBY_VERSION=$(ruby -e "
-            spec = Gem::Specification.load('rails_excel_reporter.gemspec')
-            puts spec.required_ruby_version.requirements.first.last.to_s
-          ")
-          echo "version=$RUBY_VERSION" >> $GITHUB_OUTPUT
-
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ steps.ruby-version.outputs.version }}
+          ruby-version: '3.2'
           bundler-cache: true
 
-      - name: Lint code for consistent style
-        run: bin/rubocop -f github
+      - name: Run RuboCop
+        run: bundle exec rubocop
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: ['3.2', '3.3']
+    name: Test Ruby ${{ matrix.ruby-version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+
+      - name: Run tests
+        run: bundle exec rspec
+

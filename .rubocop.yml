@@ -249,16 +249,13 @@ Layout/EmptyLineBetweenDefs:
 Layout/LineLength:
   Enabled: true
   Exclude:
-    - "db/**/*"
-    - "config/routes.rb"
     - "bin/**/*"
+    - "*.gemspec"
 
 Metrics/AbcSize:
   Enabled: true
   Max: 17
   Exclude:
-    - "db/**/*"
-    - "config/routes.rb"
     - "bin/**/*"
 
 Metrics/BlockLength:
@@ -273,14 +270,12 @@ Metrics/BlockNesting:
   Enabled: true
   Max: 1
   Exclude:
-    - "db/**/*"
     - "config/routes.rb"
     - "bin/**/*"
 
 Metrics/CyclomaticComplexity:
   Enabled: true
   Exclude:
-    - "db/**/*"
     - "config/routes.rb"
     - "bin/**/*"
 
@@ -288,7 +283,6 @@ Metrics/MethodLength:
   Enabled: true
   Max: 8
   Exclude:
-    - "db/**/*"
     - "config/routes.rb"
     - "bin/**/*"
 

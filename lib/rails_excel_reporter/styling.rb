@@ -1,7 +1,7 @@
 module RailsExcelReporter
   module Styling
     def self.included(base)
-      base.extend(ClassMethods)
+      base.extend ClassMethods
     end
 
     module ClassMethods
@@ -16,7 +16,7 @@ module RailsExcelReporter
 
       def inherited(subclass)
         super
-        subclass.instance_variable_set(:@styles, @styles.dup) if @styles
+        subclass.instance_variable_set :@styles, @styles.dup if @styles
       end
     end
 
@@ -24,7 +24,7 @@ module RailsExcelReporter
       style_options = self.class.styles[style_name.to_sym] || {}
       return unless style_options.any?
 
-      worksheet.add_style(cell_range, style_options)
+      worksheet.add_style cell_range, style_options
     end
 
     def build_caxlsx_style(style_options)
@@ -53,7 +53,7 @@ module RailsExcelReporter
       merged = {}
       style_names.each do |style_name|
         style_options = self.class.styles[style_name.to_sym] || {}
-        merged = deep_merge_hashes(merged, style_options)
+        merged = deep_merge_hashes merged, style_options
       end
       merged
     end
@@ -61,13 +61,13 @@ module RailsExcelReporter
     def get_column_style(column_name)
       column_style = self.class.styles[column_name.to_sym] || {}
       default_style = RailsExcelReporter.config.default_styles[:cell] || {}
-      deep_merge_hashes(default_style, column_style)
+      deep_merge_hashes default_style, column_style
     end
 
     def get_header_style
       header_style = self.class.styles[:header] || {}
       default_style = RailsExcelReporter.config.default_styles[:header] || {}
-      deep_merge_hashes(default_style, header_style)
+      deep_merge_hashes default_style, header_style
     end
 
     private
@@ -76,10 +76,10 @@ module RailsExcelReporter
       result = hash1.dup
       hash2.each do |key, value|
         result[key] = if result[key].is_a?(Hash) && value.is_a?(Hash)
-                        deep_merge_hashes(result[key], value)
-                      else
+                        deep_merge_hashes result[key], value
+        else
                         value
-                      end
+        end
       end
       result
     end

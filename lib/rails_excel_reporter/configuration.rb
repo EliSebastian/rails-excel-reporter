@@ -30,7 +30,7 @@ module RailsExcelReporter
     end
 
     def configure
-      yield(configuration)
+      yield configuration
     end
 
     def config

@@ -24,7 +24,7 @@ RSpec.configure do |config|
   config.order = :random
   Kernel.srand config.seed
 
-  config.before(:each) do
-    RailsExcelReporter.instance_variable_set(:@configuration, nil)
+  config.before :each do
+    RailsExcelReporter.instance_variable_set :@configuration, nil
   end
 end

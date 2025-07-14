@@ -4,12 +4,11 @@ module RailsExcelReporter
       filename = options[:filename] || report.filename
       disposition = options[:disposition] || 'attachment'
 
-      send_data(
+      send_data \
         report.to_xlsx,
         filename: filename,
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         disposition: disposition
-      )
     end
 
     def stream_excel_report(report, options = {})
@@ -25,9 +24,9 @@ module RailsExcelReporter
 
     def excel_report_response(report, options = {})
       if report.should_stream?
-        stream_excel_report(report, options)
+        stream_excel_report report, options
       else
-        send_excel_report(report, options)
+        send_excel_report report, options
       end
     end
   end

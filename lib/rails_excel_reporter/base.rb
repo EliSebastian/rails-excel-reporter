@@ -51,7 +51,7 @@ module RailsExcelReporter
 
     def self.inherited(subclass)
       super
-      subclass.instance_variable_set(:@attributes, @attributes.dup) if @attributes
+      subclass.instance_variable_set :@attributes, @attributes.dup if @attributes
     end
 
     def attributes
@@ -70,18 +70,18 @@ module RailsExcelReporter
     end
 
     def save_to(path)
-      File.open(path, 'wb') do |file|
-        file.write(to_xlsx)
+      File.open path, 'wb' do |file|
+        file.write to_xlsx
       end
     end
 
     def filename
-      timestamp = Time.now.strftime(RailsExcelReporter.config.date_format).gsub('-', '_')
+      timestamp = Time.now.strftime(RailsExcelReporter.config.date_format).gsub '-', '_'
       "#{worksheet_name.parameterize}_report_#{timestamp}.xlsx"
     end
 
     def stream
-      StringIO.new(to_xlsx)
+      StringIO.new to_xlsx
     end
 
     def to_h
@@ -117,18 +117,18 @@ module RailsExcelReporter
 
       before_render
 
-      @tempfile = Tempfile.new([filename.gsub('.xlsx', ''), '.xlsx'],
-                               RailsExcelReporter.config.temp_directory)
+      @tempfile = Tempfile.new [filename.gsub('.xlsx', ''), '.xlsx'],
+                               RailsExcelReporter.config.temp_directory
 
       package = ::Axlsx::Package.new
       workbook = package.workbook
 
-      worksheet = workbook.add_worksheet(name: worksheet_name)
+      worksheet = workbook.add_worksheet name: worksheet_name
 
-      add_headers(worksheet)
-      add_data_rows(worksheet)
+      add_headers worksheet
+      add_data_rows worksheet
 
-      package.serialize(@tempfile.path)
+      package.serialize @tempfile.path
 
       @rendered = true
 
@@ -141,46 +141,46 @@ module RailsExcelReporter
 
     def add_headers(worksheet)
       header_values = attributes.map { |attr| attr[:header] }
-      header_style = build_caxlsx_style(get_header_style)
+      header_style = build_caxlsx_style get_header_style
 
       if header_style.any?
-        style_id = worksheet.workbook.styles.add_style(header_style)
-        worksheet.add_row(header_values, style: style_id)
+        style_id = worksheet.workbook.styles.add_style header_style
+        worksheet.add_row header_values, style: style_id
       else
-        worksheet.add_row(header_values)
+        worksheet.add_row header_values
       end
 
-      worksheet.auto_filter = "A1:#{column_letter(attributes.size)}1"
+      worksheet.auto_filter = "A1:#{column_letter attributes.size}1"
     end
 
     def add_data_rows(worksheet)
       with_progress_tracking do |object, _progress|
-        before_row(object)
+        before_row object
 
         row_values = attributes.map do |attr|
-          get_attribute_value(object, attr[:name])
+          get_attribute_value object, attr[:name]
         end
 
         row_styles = attributes.map do |attr|
-          style_options = build_caxlsx_style(get_column_style(attr[:name]))
-          worksheet.workbook.styles.add_style(style_options) if style_options.any?
+          style_options = build_caxlsx_style get_column_style(attr[:name])
+          worksheet.workbook.styles.add_style style_options if style_options.any?
         end
 
-        worksheet.add_row(row_values, style: row_styles)
+        worksheet.add_row row_values, style: row_styles
 
-        after_row(object)
+        after_row object
       end
     end
 
     def get_attribute_value(object, attribute_name)
-      if respond_to?(attribute_name)
+      if respond_to? attribute_name
         @object = object
-        result = send(attribute_name)
+        result = send attribute_name
         @object = nil
         result
-      elsif object.respond_to?(attribute_name)
-        object.send(attribute_name)
-      elsif object.respond_to?(:[])
+      elsif object.respond_to? attribute_name
+        object.send attribute_name
+      elsif object.respond_to? :[]
         object[attribute_name] || object[attribute_name.to_s]
       end
     end
@@ -190,7 +190,7 @@ module RailsExcelReporter
     def collection_data
       @collection_data ||= stream_data.map do |item|
         attributes.map do |attr|
-          get_attribute_value(item, attr[:name])
+          get_attribute_value item, attr[:name]
         end
       end
     end

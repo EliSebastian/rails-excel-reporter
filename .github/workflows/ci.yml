@@ -12,10 +12,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Extract Ruby version from gemspec
+        id: ruby-version
+        run: |
+          RUBY_VERSION=$(ruby -e "
+            spec = Gem::Specification.load('rails_excel_reporter.gemspec')
+            puts spec.required_ruby_version.requirements.first.last.to_s
+          ")
+          echo "version=$RUBY_VERSION" >> $GITHUB_OUTPUT
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: .ruby-version
+          ruby-version: ${{ steps.ruby-version.outputs.version }}
           bundler-cache: true
 
       - name: Lint code for consistent style

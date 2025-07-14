@@ -116,25 +116,29 @@ module RailsExcelReporter
 
     def render
       validate_attributes!
-
       before_render
 
+      create_tempfile
+      create_worksheet
+
+      @rendered = true
+      after_render
+    end
+
+    def create_tempfile
       @tempfile = Tempfile.new [filename.gsub('.xlsx', ''), '.xlsx'],
                                RailsExcelReporter.config.temp_directory
+    end
 
+    def create_worksheet
       package = ::Axlsx::Package.new
       workbook = package.workbook
-
       worksheet = workbook.add_worksheet name: worksheet_name
 
       add_headers worksheet
       add_data_rows worksheet
 
       package.serialize @tempfile.path
-
-      @rendered = true
-
-      after_render
     end
 
     def validate_attributes!

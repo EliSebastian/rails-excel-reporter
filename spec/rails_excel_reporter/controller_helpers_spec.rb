@@ -82,7 +82,8 @@ RSpec.describe RailsExcelReporter::ControllerHelpers do
     it 'sets up streaming response headers' do
       controller.stream_excel_report report
 
-      expect(controller.response.headers['Content-Type']).to eq('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+      expected_content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      expect(controller.response.headers['Content-Type']).to eq(expected_content_type)
       expect(controller.response.headers['Content-Disposition']).to match(/attachment; filename=/)
       expect(controller.response.headers['Content-Transfer-Encoding']).to eq('binary')
       expect(controller.response.headers['Last-Modified']).to be_present

@@ -13,23 +13,36 @@ module RailsExcelReporter
     end
 
     config.after_initialize do
-      if defined?(Rails.application) && Rails.application
-        begin
-          reports_path = Rails.root.join 'app/reports'
+      configure_reports_path if rails_application_available?
+    end
 
-          if Rails.application.paths['app/reports']
-            unless Rails.application.paths['app/reports'].paths.include? reports_path.to_s
-              Rails.application.paths['app/reports'] << reports_path.to_s
-            end
+    private
 
-            if Rails.application.paths['app/reports'].respond_to? :eager_load!
-              Rails.application.paths['app/reports'].eager_load!
-            end
-          end
-        rescue StandardError => e
-          Rails.logger.warn "RailsExcelReporter: Failed to configure app/reports path: #{e.message}" if Rails.logger
-        end
+    def self.rails_application_available?
+      defined?(Rails.application) && Rails.application
+    end
+
+    def self.configure_reports_path
+      reports_path = Rails.root.join 'app/reports'
+      setup_reports_path reports_path if Rails.application.paths['app/reports']
+    rescue StandardError => e
+      log_configuration_warning e
+    end
+
+    def self.setup_reports_path(reports_path)
+      app_reports_paths = Rails.application.paths['app/reports']
+
+      unless app_reports_paths.paths.include? reports_path.to_s
+        app_reports_paths << reports_path.to_s
       end
+
+      app_reports_paths.eager_load! if app_reports_paths.respond_to? :eager_load!
+    end
+
+    def self.log_configuration_warning(error)
+      return unless Rails.logger
+
+      Rails.logger.warn "RailsExcelReporter: Failed to configure app/reports path: #{error.message}"
     end
   end
 end

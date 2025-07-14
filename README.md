@@ -1,7 +1,7 @@
 # Rails Excel Reporter
 
 [![Gem Version](https://badge.fury.io/rb/rails-excel-reporter.svg)](https://badge.fury.io/rb/rails-excel-reporter)
-[![Build Status](https://github.com/rails-excel-reporter/rails-excel-reporter/workflows/CI/badge.svg)](https://github.com/rails-excel-reporter/rails-excel-reporter/actions)
+[![Build Status](https://https://github.com/EliSebastian/rails-excel-reporter/workflows/CI/badge.svg)](https://https://github.com/EliSebastian/rails-excel-reporter/actions)
 
 A Ruby gem that integrates seamlessly with Ruby on Rails to generate Excel reports (.xlsx format) using a simple DSL. Features include streaming for large datasets, custom styling, callbacks, and Rails helpers.
 
@@ -45,7 +45,7 @@ Create a report in `app/reports/`:
 ```ruby
 class UserReport < RailsExcelReporter::Base
   attributes :id, :name, :email, :created_at
-  
+
   def created_at
     object.created_at.strftime("%Y-%m-%d")
   end
@@ -80,10 +80,10 @@ This creates `app/reports/user_report.rb` with the basic structure.
 class ProductReport < RailsExcelReporter::Base
   # Simple attributes
   attributes :id, :name, :price
-  
+
   # Custom headers
   attributes :id, { name: :product_name, header: "Product Name" }, :price
-  
+
   # Or use individual attribute method
   attribute :sku, header: "SKU Code"
 end
@@ -96,15 +96,15 @@ Override attribute methods to customize output:
 ```ruby
 class OrderReport < RailsExcelReporter::Base
   attributes :id, :customer_name, :total, :status
-  
+
   def customer_name
     "#{object.customer.first_name} #{object.customer.last_name}"
   end
-  
+
   def total
     "$#{object.total.round(2)}"
   end
-  
+
   def status
     object.status.upcase
   end
@@ -139,7 +139,7 @@ Automatically handles large datasets with streaming:
 ```ruby
 class LargeDataReport < RailsExcelReporter::Base
   attributes :id, :name, :data
-  
+
   # Customize streaming threshold (default: 1000)
   self.streaming_threshold = 5000
 end
@@ -157,7 +157,7 @@ Apply custom styles to headers and columns:
 ```ruby
 class StyledReport < RailsExcelReporter::Base
   attributes :id, :name, :email, :status
-  
+
   # Header styling
   style :header, {
     bg_color: "4472C4",
@@ -165,13 +165,13 @@ class StyledReport < RailsExcelReporter::Base
     bold: true,
     font_size: 12
   }
-  
+
   # Column-specific styling
   style :id, {
     alignment: { horizontal: :center },
     font_size: 10
   }
-  
+
   style :status, {
     bold: true,
     bg_color: "E7E6E6"
@@ -186,19 +186,19 @@ Hook into the generation process:
 ```ruby
 class CallbackReport < RailsExcelReporter::Base
   attributes :id, :name, :email
-  
+
   def before_render
     Rails.logger.info "Starting report generation at #{Time.current}"
   end
-  
+
   def after_render
     Rails.logger.info "Report generated successfully"
   end
-  
+
   def before_row(object)
     # Called before each row is processed
   end
-  
+
   def after_row(object)
     # Called after each row is processed
   end
@@ -215,16 +215,16 @@ The gem provides several helper methods for controllers:
 class ReportsController < ApplicationController
   def download_users
     report = UserReport.new(User.all)
-    
+
     # Simple download
     send_excel_report(report)
-    
+
     # With custom filename
     send_excel_report(report, filename: "users_#{Date.current}.xlsx")
-    
+
     # Stream large reports
     stream_excel_report(report)
-    
+
     # Automatic streaming based on size
     excel_report_response(report)
   end
@@ -289,7 +289,7 @@ RailsExcelReporter.configure do |config|
       border: { style: :thin, color: "CCCCCC" }
     }
   }
-  
+
   config.date_format = "%d/%m/%Y"
   config.streaming_threshold = 2000
   config.temp_directory = Rails.root.join("tmp", "reports")
@@ -344,7 +344,7 @@ The gem includes test helpers for easier testing:
 RSpec.describe UserReport do
   let(:users) { create_list(:user, 3) }
   let(:report) { UserReport.new(users) }
-  
+
   describe "#to_xlsx" do
     it "generates Excel file" do
       xlsx_data = report.to_xlsx
@@ -352,7 +352,7 @@ RSpec.describe UserReport do
       expect(xlsx_data[0, 4]).to eq("PK\x03\x04") # ZIP signature
     end
   end
-  
+
   describe "#filename" do
     it "generates appropriate filename" do
       expect(report.filename).to match(/user_report_\d{4}_\d{2}_\d{2}\.xlsx/)
@@ -381,11 +381,11 @@ bundle exec rspec --format documentation
 ```ruby
 class ProductReport < RailsExcelReporter::Base
   attributes :id, :name, :price, :category
-  
+
   def price
     "$#{object.price.round(2)}"
   end
-  
+
   def category
     object.category.name
   end
@@ -402,40 +402,40 @@ report.save_to("products.xlsx")
 ```ruby
 class SalesReport < RailsExcelReporter::Base
   attributes :date, :product, :quantity, :revenue, :profit
-  
+
   style :header, {
     bg_color: "1F4E79",
     fg_color: "FFFFFF",
     bold: true,
     font_size: 14
   }
-  
+
   style :revenue, {
     bg_color: "E2EFDA",
     alignment: { horizontal: :right }
   }
-  
+
   style :profit, {
     bg_color: "FCE4D6",
     alignment: { horizontal: :right }
   }
-  
+
   def date
     object.created_at.strftime("%Y-%m-%d")
   end
-  
+
   def product
     object.product.name
   end
-  
+
   def revenue
     "$#{object.revenue.round(2)}"
   end
-  
+
   def profit
     "$#{object.profit.round(2)}"
   end
-  
+
   def before_render
     Rails.logger.info "Generating sales report for #{collection.count} records"
   end
@@ -447,9 +447,9 @@ end
 ```ruby
 class MassiveDataReport < RailsExcelReporter::Base
   attributes :id, :data, :processed_at
-  
+
   self.streaming_threshold = 10000
-  
+
   def processed_at
     object.processed_at.strftime("%Y-%m-%d %H:%M:%S")
   end
@@ -479,7 +479,7 @@ end
 
 ```bash
 # Clone the repository
-git clone https://github.com/rails-excel-reporter/rails-excel-reporter.git
+git clone https://github.com/EliSebastian/rails-excel-reporter.git
 cd rails-excel-reporter
 
 # Install dependencies
@@ -501,6 +501,6 @@ This gem is available as open source under the terms of the [MIT License](https:
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/rails-excel-reporter/rails-excel-reporter/issues)
-- **Documentation**: [GitHub Wiki](https://github.com/rails-excel-reporter/rails-excel-reporter/wiki)
-- **Changelog**: [CHANGELOG.md](https://github.com/rails-excel-reporter/rails-excel-reporter/blob/main/CHANGELOG.md)
+- **Issues**: [GitHub Issues](https://github.com/EliSebastian/rails-excel-reporter/issues)
+- **Documentation**: [GitHub Wiki](https://github.com/EliSebastian/rails-excel-reporter/wiki)
+- **Changelog**: [CHANGELOG.md](https://github.com/EliSebastian/rails-excel-reporter/blob/main/CHANGELOG.md)

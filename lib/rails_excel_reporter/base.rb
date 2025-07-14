@@ -168,20 +168,28 @@ module RailsExcelReporter
 
     def add_data_rows(worksheet)
       with_progress_tracking do |object, _progress|
-        before_row object
+        process_data_row worksheet, object
+      end
+    end
 
-        row_values = attributes.map do |attr|
-          get_attribute_value object, attr[:name]
-        end
+    def process_data_row(worksheet, object)
+      before_row object
+      row_values = build_row_values object
+      row_styles = build_row_styles worksheet
+      worksheet.add_row row_values, style: row_styles
+      after_row object
+    end
 
-        row_styles = attributes.map do |attr|
-          style_options = build_caxlsx_style get_column_style(attr[:name])
-          worksheet.workbook.styles.add_style style_options if style_options.any?
-        end
+    def build_row_values(object)
+      attributes.map do |attr|
+        get_attribute_value object, attr[:name]
+      end
+    end
 
-        worksheet.add_row row_values, style: row_styles
-
-        after_row object
+    def build_row_styles(worksheet)
+      attributes.map do |attr|
+        style_options = build_caxlsx_style get_column_style(attr[:name])
+        worksheet.workbook.styles.add_style style_options if style_options.any?
       end
     end
 

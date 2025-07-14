@@ -1,7 +1,7 @@
 # Rails Excel Reporter
 
 [![Gem Version](https://badge.fury.io/rb/rails-excel-reporter.svg)](https://badge.fury.io/rb/rails-excel-reporter)
-[![Build Status](https://https://github.com/EliSebastian/rails-excel-reporter/workflows/CI/badge.svg)](https://https://github.com/EliSebastian/rails-excel-reporter/actions)
+[![Build Status](https://github.com/EliSebastian/rails-excel-reporter/workflows/CI/badge.svg)](https://github.com/EliSebastian/rails-excel-reporter/actions)
 
 A Ruby gem that integrates seamlessly with Ruby on Rails to generate Excel reports (.xlsx format) using a simple DSL. Features include streaming for large datasets, custom styling, callbacks, and Rails helpers.
 

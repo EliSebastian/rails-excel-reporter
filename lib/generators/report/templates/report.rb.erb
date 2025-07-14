@@ -1,0 +1,43 @@
+class <%= report_class_name %> < RailsExcelReporter::Base
+  <% if parsed_attributes.any? %>
+  attributes <%= attribute_names %>
+  <% else %>
+  attributes :id, :name, :created_at
+  <% end %>
+
+  <% parsed_attributes.each do |attr| %>
+  <% if attr[:type] == "date" || attr[:type] == "datetime" %>
+  def <%= attr[:name] %>
+    object.<%= attr[:name] %>&.strftime("%Y-%m-%d")
+  end
+  <% end %>
+  <% end %>
+
+  # Example of custom styling
+  # style :header, {
+  #   bg_color: "4472C4",
+  #   fg_color: "FFFFFF",
+  #   bold: true
+  # }
+  
+  # style :id, {
+  #   alignment: { horizontal: :center }
+  # }
+
+  # Example of callbacks
+  # def before_render
+  #   Rails.logger.info "Starting <%= report_class_name %> generation"
+  # end
+
+  # def after_render
+  #   Rails.logger.info "Completed <%= report_class_name %> generation"
+  # end
+
+  # def before_row(object)
+  #   # Called before each row
+  # end
+
+  # def after_row(object)
+  #   # Called after each row
+  # end
+end

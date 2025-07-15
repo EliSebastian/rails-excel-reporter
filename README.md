@@ -21,7 +21,7 @@ A Ruby gem that integrates seamlessly with Ruby on Rails to generate Excel repor
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'rails-excel-reporter'
+gem 'rails_excel_reporter', require: true
 ```
 
 And then execute:

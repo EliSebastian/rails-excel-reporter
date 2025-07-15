@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe RailsExcelReporter::Base do
-  let(:sample_data) do
+  let :sample_data do
     [
       OpenStruct.new(id: 1, name: 'John Doe', email: 'john@example.com', created_at: Time.parse('2024-01-01')),
       OpenStruct.new(id: 2, name: 'Jane Smith', email: 'jane@example.com', created_at: Time.parse('2024-01-02')),
@@ -9,8 +9,8 @@ RSpec.describe RailsExcelReporter::Base do
     ]
   end
 
-  let(:report_class) do
-    Class.new(RailsExcelReporter::Base) do
+  let :report_class do
+    Class.new RailsExcelReporter::Base do
       attributes :id, :name, :email
 
       def name
@@ -19,7 +19,7 @@ RSpec.describe RailsExcelReporter::Base do
     end
   end
 
-  let(:report) { report_class.new(sample_data) }
+  let(:report) { report_class.new sample_data }
 
   describe 'class methods' do
     describe '.attributes' do
@@ -34,7 +34,7 @@ RSpec.describe RailsExcelReporter::Base do
 
     describe '.attribute' do
       it 'adds a single attribute with custom header' do
-        klass = Class.new(RailsExcelReporter::Base)
+        klass = Class.new RailsExcelReporter::Base
         klass.attribute :custom_field, header: 'Custom Header'
 
         expect(klass.attributes).to contain_exactly(
@@ -51,7 +51,7 @@ RSpec.describe RailsExcelReporter::Base do
       end
 
       it 'accepts custom worksheet name' do
-        custom_report = report_class.new(sample_data, worksheet_name: 'Custom Sheet')
+        custom_report = report_class.new sample_data, worksheet_name: 'Custom Sheet'
         expect(custom_report.worksheet_name).to eq('Custom Sheet')
       end
 
@@ -94,8 +94,8 @@ RSpec.describe RailsExcelReporter::Base do
       end
 
       it 'returns true for large collections' do
-        large_data = (1..2000).map { |i| OpenStruct.new(id: i, name: "User #{i}") }
-        large_report = report_class.new(large_data)
+        large_data = (1..2000).map { |i| OpenStruct.new id: i, name: "User #{i}" }
+        large_report = report_class.new large_data
         expect(large_report.should_stream?).to be true
       end
     end
@@ -116,10 +116,10 @@ RSpec.describe RailsExcelReporter::Base do
 
       it 'saves to file' do
         temp_path = '/tmp/test_report.xlsx'
-        report.save_to(temp_path)
+        report.save_to temp_path
         expect(File.exist?(temp_path)).to be true
         expect(File.size(temp_path)).to be > 0
-        File.delete(temp_path)
+        File.delete temp_path
       end
     end
 
@@ -135,16 +135,16 @@ RSpec.describe RailsExcelReporter::Base do
 
   describe 'error handling' do
     it 'raises error when no attributes are defined' do
-      empty_class = Class.new(RailsExcelReporter::Base)
-      empty_report = empty_class.new([])
+      empty_class = Class.new RailsExcelReporter::Base
+      empty_report = empty_class.new []
 
       expect { empty_report.to_xlsx }.to raise_error(RuntimeError, /No attributes defined/)
     end
   end
 
   describe 'callbacks' do
-    let(:callback_class) do
-      Class.new(RailsExcelReporter::Base) do
+    let :callback_class do
+      Class.new RailsExcelReporter::Base do
         attributes :id, :name
 
         attr_reader :before_render_called, :after_render_called,
@@ -176,7 +176,7 @@ RSpec.describe RailsExcelReporter::Base do
       end
     end
 
-    let(:callback_report) { callback_class.new(sample_data) }
+    let(:callback_report) { callback_class.new sample_data }
 
     it 'calls all callbacks in correct order' do
       callback_report.to_xlsx

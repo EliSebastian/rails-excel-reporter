@@ -463,8 +463,8 @@ end
 
 ## Requirements
 
-- Ruby 2.7+
-- Rails 7.0+
+- Ruby 3.2+
+- Rails 8.0+
 - caxlsx ~> 4.0
 
 ## Contributing

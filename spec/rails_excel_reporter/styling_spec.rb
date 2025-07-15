@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe RailsExcelReporter::Styling do
-  let(:styled_class) do
-    Class.new(RailsExcelReporter::Base) do
+  let :styled_class do
+    Class.new RailsExcelReporter::Base do
       attributes :id, :name, :email
 
       style :header, {
@@ -22,14 +22,14 @@ RSpec.describe RailsExcelReporter::Styling do
     end
   end
 
-  let(:sample_data) do
+  let :sample_data do
     [
       OpenStruct.new(id: 1, name: 'John', email: 'john@example.com'),
       OpenStruct.new(id: 2, name: 'Jane', email: 'jane@example.com')
     ]
   end
 
-  let(:report) { styled_class.new(sample_data) }
+  let(:report) { styled_class.new sample_data }
 
   describe 'class methods' do
     describe '.style' do
@@ -66,12 +66,12 @@ RSpec.describe RailsExcelReporter::Styling do
 
     describe '#get_column_style' do
       it 'returns merged column style with defaults' do
-        id_style = report.get_column_style(:id)
+        id_style = report.get_column_style :id
         expect(id_style[:alignment]).to eq({ horizontal: :center })
       end
 
       it 'returns default style for undefined columns' do
-        email_style = report.get_column_style(:email)
+        email_style = report.get_column_style :email
         expect(email_style).to eq(RailsExcelReporter.config.default_styles[:cell])
       end
     end
@@ -86,7 +86,7 @@ RSpec.describe RailsExcelReporter::Styling do
           alignment: { horizontal: :center }
         }
 
-        caxlsx_style = report.build_caxlsx_style(style_options)
+        caxlsx_style = report.build_caxlsx_style style_options
 
         expect(caxlsx_style[:bg_color]).to eq('FF0000')
         expect(caxlsx_style[:fg_color]).to eq('FFFFFF')
@@ -101,7 +101,7 @@ RSpec.describe RailsExcelReporter::Styling do
         styled_class.style :base, { bold: true, font_size: 10 }
         styled_class.style :override, { font_size: 12, italic: true }
 
-        merged = report.merge_styles(:base, :override)
+        merged = report.merge_styles :base, :override
 
         expect(merged[:bold]).to be true
         expect(merged[:font_size]).to eq(12)
@@ -112,7 +112,7 @@ RSpec.describe RailsExcelReporter::Styling do
 
   describe 'inheritance' do
     it 'inherits styles from parent class' do
-      child_class = Class.new(styled_class) do
+      child_class = Class.new styled_class do
         style :email, { italic: true }
       end
 

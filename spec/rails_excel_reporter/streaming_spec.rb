@@ -1,16 +1,16 @@
 require 'spec_helper'
 
 RSpec.describe RailsExcelReporter::Streaming do
-  let(:small_data) do
-    (1..10).map { |i| OpenStruct.new(id: i, name: "User #{i}") }
+  let :small_data do
+    (1..10).map { |i| OpenStruct.new id: i, name: "User #{i}" }
   end
 
-  let(:large_data) do
-    (1..2000).map { |i| OpenStruct.new(id: i, name: "User #{i}") }
+  let :large_data do
+    (1..2000).map { |i| OpenStruct.new id: i, name: "User #{i}" }
   end
 
-  let(:report_class) do
-    Class.new(RailsExcelReporter::Base) do
+  let :report_class do
+    Class.new RailsExcelReporter::Base do
       attributes :id, :name
     end
   end
@@ -28,44 +28,44 @@ RSpec.describe RailsExcelReporter::Streaming do
 
   describe '#should_stream?' do
     it 'returns false for small collections' do
-      report = report_class.new(small_data)
+      report = report_class.new small_data
       expect(report.should_stream?).to be false
     end
 
     it 'returns true for large collections' do
-      report = report_class.new(large_data)
+      report = report_class.new large_data
       expect(report.should_stream?).to be true
     end
   end
 
   describe '#collection_size' do
     it 'calculates size for arrays' do
-      report = report_class.new(small_data)
+      report = report_class.new small_data
       expect(report.collection_size).to eq(10)
     end
 
     it 'uses count method when available' do
-      mock_collection = double('Collection')
+      mock_collection = double 'Collection'
       allow(mock_collection).to receive(:count).and_return(100)
 
-      report = report_class.new(mock_collection)
+      report = report_class.new mock_collection
       expect(report.collection_size).to eq(100)
     end
 
     it 'falls back to size method' do
-      mock_collection = double('Collection')
+      mock_collection = double 'Collection'
       allow(mock_collection).to receive(:respond_to?).with(:count).and_return(false)
       allow(mock_collection).to receive(:respond_to?).with(:size).and_return(true)
       allow(mock_collection).to receive(:size).and_return(50)
 
-      report = report_class.new(mock_collection)
+      report = report_class.new mock_collection
       expect(report.collection_size).to eq(50)
     end
   end
 
   describe '#stream_data' do
     it 'yields each item in small collections' do
-      report = report_class.new(small_data)
+      report = report_class.new small_data
       yielded_items = []
 
       report.stream_data do |item|
@@ -76,7 +76,7 @@ RSpec.describe RailsExcelReporter::Streaming do
     end
 
     it 'uses find_each for large ActiveRecord-like collections' do
-      mock_collection = double('ActiveRecord Collection')
+      mock_collection = double 'ActiveRecord Collection'
       allow(mock_collection).to receive(:respond_to?).with(:count).and_return(true)
       allow(mock_collection).to receive(:count).and_return(2000)
       allow(mock_collection).to receive(:respond_to?).with(:find_each).and_return(true)
@@ -86,7 +86,7 @@ RSpec.describe RailsExcelReporter::Streaming do
         large_data.each(&block)
       end
 
-      report = report_class.new(mock_collection)
+      report = report_class.new mock_collection
 
       report.stream_data do |item|
         yielded_items << item
@@ -96,7 +96,7 @@ RSpec.describe RailsExcelReporter::Streaming do
     end
 
     it 'returns enumerator when no block given' do
-      report = report_class.new(small_data)
+      report = report_class.new small_data
       enumerator = report.stream_data
 
       expect(enumerator).to be_a(Enumerator)
@@ -106,7 +106,7 @@ RSpec.describe RailsExcelReporter::Streaming do
 
   describe '#with_progress_tracking' do
     it 'tracks progress and yields items with progress info' do
-      report = report_class.new(small_data)
+      report = report_class.new small_data
       progress_updates = []
 
       report.with_progress_tracking do |_item, progress|

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rails-excel-reporter (0.3.0)
+    rails-excel-reporter (1.0.0)
       activesupport (>= 8.0)
       caxlsx (~> 4.0)
       rails (>= 8.0)
@@ -125,6 +125,7 @@ GEM
     marcel (1.0.4)
     method_source (1.1.0)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.9)
     minitest (5.25.5)
     net-imap (0.5.9)
       date
@@ -260,6 +261,8 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.13.1)
     simplecov_json_formatter (0.1.4)
+    sqlite3 (1.7.3)
+      mini_portile2 (~> 2.8.0)
     sqlite3 (1.7.3-aarch64-linux)
     sqlite3 (1.7.3-arm-linux)
     sqlite3 (1.7.3-arm64-darwin)

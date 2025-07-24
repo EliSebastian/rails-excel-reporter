@@ -128,7 +128,6 @@ RSpec.describe RailsExcelReporter::Streaming do
       report = report_class.new(small_data, &callback)
 
       report.with_progress_tracking do |item, progress|
-        # Just iterate
       end
 
       expect(callback_calls.size).to eq(10)
@@ -167,13 +166,13 @@ RSpec.describe RailsExcelReporter::Streaming do
       progress_updates = []
 
       report.with_progress_tracking do |item, progress|
-        progress_updates << progress if progress_updates.size < 5 || progress.current == 1500 # Solo guardamos algunos para eficiencia
+        progress_updates << progress if progress_updates.size < 5 || progress.current == 1500
       end
 
       expect(progress_updates.size).to be >= 5
       expect(progress_updates.first.current).to eq(1)
       expect(progress_updates.first.total).to eq(1500)
-      expect(progress_updates.first.percentage).to eq(0.07) # 1/1500 * 100 redondeado a 2 decimales
+      expect(progress_updates.first.percentage).to eq(0.07)
       expect(progress_updates.last.current).to eq(1500)
       expect(progress_updates.last.percentage).to eq(100.0)
     end
@@ -184,7 +183,6 @@ RSpec.describe RailsExcelReporter::Streaming do
       expect(report.should_stream?).to be true
       expect(report.collection_size).to eq(2500)
 
-      # Solo contamos en lugar de guardar todos los items para eficiencia
       item_count = 0
       report.stream_data do |item|
         item_count += 1
@@ -220,11 +218,9 @@ RSpec.describe RailsExcelReporter::Streaming do
       allow(mock_collection).to receive(:respond_to?).with(:find_each).and_return(true)
       allow(mock_collection).to receive(:respond_to?).with(:each).and_return(true)
 
-      # Simular que find_each falla con ArgumentError
       allow(mock_collection).to receive(:find_each).with(batch_size: 1000).and_raise(ArgumentError,
 'Invalid batch_size')
 
-      # Pero each funciona normalmente
       yielded_items = []
       allow(mock_collection).to receive(:each) do |&block|
         very_large_data.each(&block)

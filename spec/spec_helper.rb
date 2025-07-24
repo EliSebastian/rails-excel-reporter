@@ -1,5 +1,5 @@
 require 'bundler/setup'
-require 'rails_excel_reporter'
+require 'rails-excel-reporter'
 require 'rspec'
 require 'tempfile'
 require 'ostruct'

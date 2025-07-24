@@ -125,7 +125,6 @@ RSpec.describe RailsExcelReporter::Base do
 
     describe 'custom methods' do
       it 'calls custom methods for attribute values' do
-        # Since we can't easily inspect binary xlsx data, test the underlying data
         report_data = report.to_h[:data]
         expect(report_data[0][1]).to eq('John Doe (Custom)')
         expect(report_data[1][1]).to eq('Jane Smith (Custom)')

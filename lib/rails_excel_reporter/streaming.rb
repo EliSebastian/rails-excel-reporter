@@ -65,8 +65,22 @@ module RailsExcelReporter
 
     def stream_large_dataset(&block)
       if @collection.respond_to? :find_each
-        @collection.find_each(batch_size: 1000, &block)
-      elsif @collection.respond_to? :each
+        stream_with_find_each(&block)
+      else
+        stream_with_fallback(&block)
+      end
+    end
+
+    private
+
+    def stream_with_find_each(&block)
+      @collection.find_each(batch_size: 1000, &block)
+    rescue ArgumentError
+      stream_with_fallback(&block)
+    end
+
+    def stream_with_fallback(&block)
+      if @collection.respond_to? :each
         @collection.each(&block)
       else
         @collection.to_a.each(&block)
